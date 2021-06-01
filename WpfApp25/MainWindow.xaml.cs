@@ -23,7 +23,7 @@ namespace WpfApp25
         int bulletTimer = 0;
         int bulletTimerLimit = 90;
         int totalEnemies = 0;
-        int totalFriends = 0;
+        int totalFriends = 1;
         int enemySpeed = 6;
         bool gameOver = false;
         DispatcherTimer gameTimer = new DispatcherTimer();
@@ -41,7 +41,7 @@ namespace WpfApp25
             player.Fill = playerSkin;
             friend.Fill = friendSkin;
             myCanvas.Focus();
-            makeEnemies(40);
+            MakeEnemies(40);
         }
 
         private void GameLoop(object sender, EventArgs e) // начало игрового цикла
@@ -72,8 +72,8 @@ namespace WpfApp25
             bulletTimer -= 3;
             if (bulletTimer < 0)
             {
-                enemyBulletMaker(Canvas.GetLeft(player) + 20, 10);
-                enemyBulletMaker(Canvas.GetLeft(friend) + 20, 10);
+                EnemyBulletMaker(Canvas.GetLeft(player) + 20, 10);
+                EnemyBulletMaker(Canvas.GetLeft(friend) + 20, 10);
 
                 bulletTimer = bulletTimerLimit;
             }
@@ -105,7 +105,7 @@ namespace WpfApp25
                         }
                     }
                 }
-                if ( x is Rectangle && (string)x.Tag == "bulletFrnd")
+                if (x is Rectangle && (string)x.Tag == "bulletFrnd")
                 {
                     Canvas.SetTop(x, Canvas.GetTop(x) - 20);
                     if (Canvas.GetTop(x) < 10)
@@ -140,7 +140,7 @@ namespace WpfApp25
                     Rect enemyHitBox = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
                     if (playerHitBox.IntersectsWith(enemyHitBox) || friendHitBox.IntersectsWith(enemyHitBox))
                     {
-                        showGameOver("Пришельцы захватили мир!!");
+                        ShowGameOver("Пришельцы захватили мир!!");
                     }
                 }
                 if (x is Rectangle && (string)x.Tag == "enemyBullet")
@@ -153,7 +153,7 @@ namespace WpfApp25
                     Rect enemyBulletHitBox = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
                     if (playerHitBox.IntersectsWith(enemyBulletHitBox) || friendHitBox.IntersectsWith(enemyBulletHitBox))
                     {
-                        showGameOver("Пришельцы испепелили вас!!");
+                        ShowGameOver("Пришельцы испепелили вас!!");
                     }
                 }
             }
@@ -184,7 +184,7 @@ namespace WpfApp25
 
             if (totalEnemies < 1)
             {
-                showGameOver("Поздравляю вы выиграли!");
+                ShowGameOver("Поздравляю вы выиграли!");
             }
         } //конец цикла
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -254,9 +254,9 @@ namespace WpfApp25
             }
         }
 
-        private void enemyBulletMaker(double x, double y)
+        private void EnemyBulletMaker(double x, double y)
         {
-            Rectangle enemyBullet = new Rectangle { Tag = "enemyBullet", Height = 40, Width = 15, Fill = Brushes.Green, Stroke = Brushes.Yellow, StrokeThickness = 5 };
+            Rectangle enemyBullet = new Rectangle { Tag = "enemyBullet", Height = 40, Width = 15, Fill = Brushes.Red, Stroke = Brushes.OrangeRed, StrokeThickness = 5 };
             Canvas.SetTop(enemyBullet, y);
             Canvas.SetLeft(enemyBullet, x);
             myCanvas.Children.Add(enemyBullet);
@@ -269,12 +269,10 @@ namespace WpfApp25
             Rectangle newFriend = new Rectangle { Tag = "friend", Height = 65, Width = 50,Fill = friendSkin };
         }
 
-        private void makeEnemies(int limit)
+        private void MakeEnemies(int limit)
         {
             int left = 0;
-
             totalEnemies = limit;
-
             for (int i = 0; i < limit; i++)
             {
                 ImageBrush enemySkin = new ImageBrush();
@@ -306,7 +304,7 @@ namespace WpfApp25
                 }
             }
         }
-        private void showGameOver(string message)
+        private void ShowGameOver(string message)
         {
             gameOver = true;
             gameTimer.Stop();

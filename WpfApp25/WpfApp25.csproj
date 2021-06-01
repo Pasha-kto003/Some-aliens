@@ -95,14 +95,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\invader1.gif" />
-    <Resource Include="Images\invader2.gif" />
-    <Resource Include="Images\invader3.gif" />
-    <Resource Include="Images\invader4.gif" />
-    <Resource Include="Images\invader5.gif" />
-    <Resource Include="Images\invader6.gif" />
-    <Resource Include="Images\invader7.gif" />
-    <Resource Include="Images\invader8.gif" />
     <Resource Include="Images\player.png" />
   </ItemGroup>
   <ItemGroup>
