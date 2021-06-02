@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -12,9 +16,9 @@ using System.Windows.Threading;
 namespace WpfApp25
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для PlayWithFriend.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PlayWithFriend : Window
     {
         bool goLeft, goRight;
         bool goLeftFrnd, goRightFrnd;
@@ -30,28 +34,42 @@ namespace WpfApp25
         ImageBrush playerSkin = new ImageBrush();
         ImageBrush friendSkin = new ImageBrush();
 
-        public MainWindow()
+        public PlayWithFriend()
         {
             InitializeComponent();
             gameTimer.Tick += GameLoop;
             gameTimer.Interval = TimeSpan.FromMilliseconds(30);
             gameTimer.Start();
+            gameTimer.Stop();
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/Pasha (1).png"));
             friendSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/player.png"));
             player.Fill = playerSkin;
+            friend.Fill = friendSkin;
             myCanvas.Focus();
-            MakeEnemies(40);
+            MakeEnemies(60);
         }
 
         private void GameLoop(object sender, EventArgs e) // начало игрового цикла
         {
             Rect playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
+            Rect friendHitBox = new Rect(Canvas.GetLeft(friend), Canvas.GetTop(friend), friend.Width, friend.Height);
             enemiesLeft.Content = "Осталось всего пришельцев: " + totalEnemies;
 
             if (goLeft == true && Canvas.GetLeft(player) > 0)
             {
                 Canvas.SetLeft(player, Canvas.GetLeft(player) - 10);
             }
+
+            if (goLeftFrnd == true && Canvas.GetLeft(friend) > 0)
+            {
+                Canvas.SetLeft(friend, Canvas.GetLeft(friend) - 10);
+            }
+
+            if (goRightFrnd == true && Canvas.GetLeft(friend) + 80 < Application.Current.MainWindow.Width)
+            {
+                Canvas.SetLeft(friend, Canvas.GetLeft(friend) + 10);
+            }
+
             if (goRight == true && Canvas.GetLeft(player) + 80 < Application.Current.MainWindow.Width)
             {
                 Canvas.SetLeft(player, Canvas.GetLeft(player) + 10);
@@ -60,6 +78,8 @@ namespace WpfApp25
             if (bulletTimer < 0)
             {
                 EnemyBulletMaker(Canvas.GetLeft(player) + 20, 10);
+                EnemyBulletMaker(Canvas.GetLeft(friend) + 20, 10);
+
                 bulletTimer = bulletTimerLimit;
             }
             foreach (var x in myCanvas.Children.OfType<Rectangle>())
@@ -88,6 +108,29 @@ namespace WpfApp25
                         }
                     }
                 }
+                if (x is Rectangle && (string)x.Tag == "bulletFrnd")
+                {
+                    Canvas.SetTop(x, Canvas.GetTop(x) - 20);
+                    if (Canvas.GetTop(x) < 10)
+                    {
+                        itemsToRemove.Add(x);
+                    }
+                    Rect bulletFrnd = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+                    foreach (var y in myCanvas.Children.OfType<Rectangle>())
+                    {
+                        if (y is Rectangle && (string)y.Tag == "enemy")
+                        {
+                            Rect enemyHit = new Rect(Canvas.GetLeft(y), Canvas.GetTop(y), y.Width, y.Height);
+
+                            if (bulletFrnd.IntersectsWith(enemyHit))
+                            {
+                                itemsToRemove.Add(x);
+                                itemsToRemove.Add(y);
+                                totalEnemies -= 1;
+                            }
+                        }
+                    }
+                }
                 if (x is Rectangle && (string)x.Tag == "enemy")
                 {
                     Canvas.SetLeft(x, Canvas.GetLeft(x) + enemySpeed);
@@ -98,7 +141,7 @@ namespace WpfApp25
                         Canvas.SetTop(x, Canvas.GetTop(x) + (x.Height + 10));
                     }
                     Rect enemyHitBox = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                    if (playerHitBox.IntersectsWith(enemyHitBox))
+                    if (playerHitBox.IntersectsWith(enemyHitBox) || friendHitBox.IntersectsWith(enemyHitBox))
                     {
                         ShowGameOver("Пришельцы захватили мир!!");
                     }
@@ -111,7 +154,7 @@ namespace WpfApp25
                         itemsToRemove.Add(x);
                     }
                     Rect enemyBulletHitBox = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                    if (playerHitBox.IntersectsWith(enemyBulletHitBox))
+                    if (playerHitBox.IntersectsWith(enemyBulletHitBox) || friendHitBox.IntersectsWith(enemyBulletHitBox))
                     {
                         ShowGameOver("Пришельцы испепелили вас!!");
                     }
@@ -124,25 +167,25 @@ namespace WpfApp25
 
             if (totalEnemies < 30)
             {
-                enemySpeed = 9;
+                enemySpeed = 12;
             }
 
-            if(totalEnemies < 20)
+            if (totalEnemies < 20)
             {
-                enemySpeed = 10;
-            }     
+                enemySpeed = 15;
+            }
 
             if (totalEnemies == 3)
             {
-                enemySpeed = 16;
+                enemySpeed = 18;
             }
 
             if (totalEnemies < 1)
             {
                 ShowGameOver("Поздравляю вы выиграли!");
-                Level2 lv = new Level2();
-                lv.Show();
-              
+                //Level2 lv = new Level2();
+                //lv.Show();
+
             }
         } //конец цикла
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -151,6 +194,17 @@ namespace WpfApp25
             {
                 goLeft = true;
             }
+
+            if (e.Key == Key.A)
+            {
+                goLeftFrnd = true;
+            }
+
+            if (e.Key == Key.D)
+            {
+                goRightFrnd = true;
+            }
+
             if (e.Key == Key.Right)
             {
                 goRight = true;
@@ -162,6 +216,17 @@ namespace WpfApp25
             {
                 goLeft = false;
             }
+
+            if (e.Key == Key.A)
+            {
+                goLeftFrnd = false;
+            }
+
+            if (e.Key == Key.D)
+            {
+                goRightFrnd = false;
+            }
+
             if (e.Key == Key.Right)
             {
                 goRight = false;
@@ -169,10 +234,18 @@ namespace WpfApp25
 
             if (e.Key == Key.Space)
             {
-                Rectangle newBullet = new Rectangle { Tag = "bullet", Height = 20, Width = 5, Fill = Brushes.Orange,  Stroke = Brushes.Red };
+                Rectangle newBullet = new Rectangle { Tag = "bullet", Height = 20, Width = 5, Fill = Brushes.Orange, Stroke = Brushes.Red };
                 Canvas.SetTop(newBullet, Canvas.GetTop(player) - newBullet.Height);
                 Canvas.SetLeft(newBullet, Canvas.GetLeft(player) + player.Width / 2);
                 myCanvas.Children.Add(newBullet);
+            }
+
+            if (e.Key == Key.LeftCtrl)
+            {
+                Rectangle newBulletFrnd = new Rectangle { Tag = "bulletFrnd", Height = 20, Width = 5, Fill = Brushes.Orange, Stroke = Brushes.Red };
+                Canvas.SetTop(newBulletFrnd, Canvas.GetTop(friend) - newBulletFrnd.Height);
+                Canvas.SetLeft(newBulletFrnd, Canvas.GetLeft(friend) + friend.Width / 2);
+                myCanvas.Children.Add(newBulletFrnd);
             }
 
             if (e.Key == Key.Enter && gameOver == true)
@@ -221,7 +294,7 @@ namespace WpfApp25
                         break;
                     case 4:
                         enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/Pasha_4.png"));
-                        break;                                         
+                        break;
                 }
             }
         }

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -12,9 +16,9 @@ using System.Windows.Threading;
 namespace WpfApp25
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для Level2.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Level2 : Window
     {
         bool goLeft, goRight;
         bool goLeftFrnd, goRightFrnd;
@@ -28,19 +32,21 @@ namespace WpfApp25
         bool gameOver = false;
         DispatcherTimer gameTimer = new DispatcherTimer();
         ImageBrush playerSkin = new ImageBrush();
-        ImageBrush friendSkin = new ImageBrush();
+        ImageBrush myCanvasSkin = new ImageBrush();
 
-        public MainWindow()
+        public Level2()
         {
             InitializeComponent();
             gameTimer.Tick += GameLoop;
             gameTimer.Interval = TimeSpan.FromMilliseconds(30);
             gameTimer.Start();
+            //gameTimer.Stop();
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/Pasha (1).png"));
-            friendSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/player.png"));
             player.Fill = playerSkin;
+            myCanvas.Background = myCanvasSkin;
+            myCanvasSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/PSM_V69_D182_Small_magellanic_cloud_and_its_variable_stars.png"));
             myCanvas.Focus();
-            MakeEnemies(40);
+            MakeEnemies(60);
         }
 
         private void GameLoop(object sender, EventArgs e) // начало игрового цикла
@@ -88,6 +94,7 @@ namespace WpfApp25
                         }
                     }
                 }
+                
                 if (x is Rectangle && (string)x.Tag == "enemy")
                 {
                     Canvas.SetLeft(x, Canvas.GetLeft(x) + enemySpeed);
@@ -105,7 +112,7 @@ namespace WpfApp25
                 }
                 if (x is Rectangle && (string)x.Tag == "enemyBullet")
                 {
-                    Canvas.SetTop(x, Canvas.GetTop(x) + 10);
+                    Canvas.SetTop(x, Canvas.GetTop(x) + 10); //скорость пули врага
                     if (Canvas.GetTop(x) > 480)
                     {
                         itemsToRemove.Add(x);
@@ -122,27 +129,34 @@ namespace WpfApp25
                 myCanvas.Children.Remove(i);
             }
 
-            if (totalEnemies < 30)
+            if(totalEnemies < 30)
             {
-                enemySpeed = 9;
+                enemySpeed = 12;
             }
 
-            if(totalEnemies < 20)
+            if (totalEnemies < 30)
             {
-                enemySpeed = 10;
-            }     
+                enemySpeed = 15;
+            }
+
+            if (totalEnemies < 20)
+            {
+                enemySpeed = 18;
+            }
 
             if (totalEnemies == 3)
             {
-                enemySpeed = 16;
+                enemySpeed = 21;
             }
 
             if (totalEnemies < 1)
             {
                 ShowGameOver("Поздравляю вы выиграли!");
-                Level2 lv = new Level2();
-                lv.Show();
-              
+                Boss bs = new Boss();
+                bs.Show();
+                //Level2 lv = new Level2();
+                //lv.Show();
+                
             }
         } //конец цикла
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -151,6 +165,7 @@ namespace WpfApp25
             {
                 goLeft = true;
             }
+
             if (e.Key == Key.Right)
             {
                 goRight = true;
@@ -162,6 +177,7 @@ namespace WpfApp25
             {
                 goLeft = false;
             }
+
             if (e.Key == Key.Right)
             {
                 goRight = false;
@@ -169,7 +185,7 @@ namespace WpfApp25
 
             if (e.Key == Key.Space)
             {
-                Rectangle newBullet = new Rectangle { Tag = "bullet", Height = 20, Width = 5, Fill = Brushes.Orange,  Stroke = Brushes.Red };
+                Rectangle newBullet = new Rectangle { Tag = "bullet", Height = 20, Width = 5, Fill = Brushes.Orange, Stroke = Brushes.Red };
                 Canvas.SetTop(newBullet, Canvas.GetTop(player) - newBullet.Height);
                 Canvas.SetLeft(newBullet, Canvas.GetLeft(player) + player.Width / 2);
                 myCanvas.Children.Add(newBullet);
@@ -221,7 +237,7 @@ namespace WpfApp25
                         break;
                     case 4:
                         enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/Pasha_4.png"));
-                        break;                                         
+                        break;
                 }
             }
         }
