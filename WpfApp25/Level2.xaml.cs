@@ -245,7 +245,7 @@ namespace WpfApp25
         {
             gameOver = true;
             gameTimer.Stop();
-            enemiesLeft.Content += " " + message + " Нажмите Enter чтобы снова играть";
+            enemiesLeft.Content = " " + message + " Нажмите Enter чтобы снова играть";
         }
     }
 }

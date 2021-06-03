@@ -212,7 +212,7 @@ namespace WpfApp25
         {
             gameOver = true;
             gameTimer.Stop();
-            liveBoss.Content += " " + message + " Нажмите Enter чтобы снова играть";
+            liveBoss.Content = " " + message + " Нажмите Enter чтобы снова играть";
         }
     }
 }

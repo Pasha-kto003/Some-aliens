@@ -60,6 +60,9 @@ namespace WpfApp25
             if (bulletTimer < 0)
             {
                 EnemyBulletMaker(Canvas.GetLeft(player) + 20, 10);
+                Random random = new Random();
+                EnemyBulletMaker(random.Next(0, 500), random.Next(3, 10));
+                EnemyBulletMaker(random.Next(0, 500), random.Next(3, 10));
                 bulletTimer = bulletTimerLimit;
             }
             foreach (var x in myCanvas.Children.OfType<Rectangle>())
@@ -110,7 +113,7 @@ namespace WpfApp25
                     {
                         itemsToRemove.Add(x);
                     }
-                    Rect enemyBulletHitBox = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+                    Rect enemyBulletHitBox = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), 20, 30);
                     if (playerHitBox.IntersectsWith(enemyBulletHitBox))
                     {
                         ShowGameOver("Пришельцы испепелили вас!!");
@@ -229,7 +232,7 @@ namespace WpfApp25
         {
             gameOver = true;
             gameTimer.Stop();
-            enemiesLeft.Content += " " + message + " Нажмите Enter чтобы снова играть";
+            enemiesLeft.Content = " " + message + " Нажмите Enter чтобы снова играть";
         }
     }
 }
