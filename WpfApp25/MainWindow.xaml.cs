@@ -28,7 +28,8 @@ namespace WpfApp25
         bool gameOver = false;
         DispatcherTimer gameTimer = new DispatcherTimer();
         ImageBrush playerSkin = new ImageBrush();
-        ImageBrush friendSkin = new ImageBrush();
+        ImageBrush myCanvasSkin = new ImageBrush();
+        //ImageBrush friendSkin = new ImageBrush();
 
         public MainWindow()
         {
@@ -36,8 +37,10 @@ namespace WpfApp25
             gameTimer.Tick += GameLoop;
             gameTimer.Interval = TimeSpan.FromMilliseconds(30);
             gameTimer.Start();
-            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/Pasha (1).png"));
-            friendSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/player.png"));
+            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/MyShip_-3000.png"));
+            myCanvas.Background = myCanvasSkin;
+            myCanvasSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/SpaceforGame.jpg"));
+            //friendSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/player.png"));
             player.Fill = playerSkin;
             myCanvas.Focus();
             MakeEnemies(40);

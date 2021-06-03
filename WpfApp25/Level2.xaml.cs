@@ -41,7 +41,7 @@ namespace WpfApp25
             gameTimer.Interval = TimeSpan.FromMilliseconds(30);
             gameTimer.Start();
             //gameTimer.Stop();
-            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/Pasha (1).png"));
+            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/MyShip_-3000.png"));
             player.Fill = playerSkin;
             myCanvas.Background = myCanvasSkin;
             myCanvasSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/PSM_V69_D182_Small_magellanic_cloud_and_its_variable_stars.png"));

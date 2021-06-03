@@ -136,5 +136,17 @@
   <ItemGroup>
     <Resource Include="Images\PSM_V69_D182_Small_magellanic_cloud_and_its_variable_stars.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MyShip_-3000.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SpaceforGame.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BIG BOSS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SpaceForGame.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

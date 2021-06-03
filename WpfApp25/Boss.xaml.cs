@@ -31,6 +31,7 @@ namespace WpfApp25
         int bossHeal = 1000;
         bool gameOver = false;
         DispatcherTimer gameTimer = new DispatcherTimer();
+        //ImageBrush myCanvasSkin = new ImageBrush();
         ImageBrush playerSkin = new ImageBrush();
 
         public Boss()
@@ -40,7 +41,9 @@ namespace WpfApp25
             gameTimer.Interval = TimeSpan.FromMilliseconds(30);
             gameTimer.Start();
             //gameTimer.Stop();
-            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/Pasha (1).png"));
+            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/MyShip_-3000.png"));
+            //myCanvasSkin.ImageSource = new BitmapImage(new Uri("pack: //aplication:,,,/images/SpaceForGame.png"));
+            //myCanvas.Background = myCanvasSkin;
             player.Fill = playerSkin;
             myCanvas.Focus();
             MakeBoss(1);
@@ -214,7 +217,7 @@ namespace WpfApp25
                 Canvas.SetLeft(newBoss, left);
                 myCanvas.Children.Add(newBoss);
                 left -= 1;
-                bossSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/Pasha1.png"));
+                bossSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/BIG BOSS.png"));
             }
 
         }
